@@ -9,7 +9,7 @@ const Modal = ({ isOpen, onClose, children }) => {
       setShowModal(true);
       setTimeout(() => closeButtonRef.current?.focus(), 0); // Enfoca el botón de cierre
     } else {
-      setTimeout(() => setShowModal(false), 300);
+      setTimeout(() => setShowModal(false), 300); // Espera a que termine la animación
     }
   }, [isOpen]);
 
@@ -25,18 +25,26 @@ const Modal = ({ isOpen, onClose, children }) => {
 
   if (!showModal && !isOpen) return null;
 
+  const handleOverlayClick = (e) => {
+    if (e.target === e.currentTarget) {
+      onClose();
+    }
+  };
+
   return (
     <div
-      className={`fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center transition-opacity duration-300 ${
+      className={`fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center transition-opacity duration-300 ease-in-out ${
         isOpen ? "opacity-100" : "opacity-0"
       }`}
       role="dialog"
       aria-modal="true"
+      onClick={handleOverlayClick}
     >
       <div
-        className={`bg-white rounded-lg shadow-lg p-6 relative transition-transform duration-300 ${
+        className={`bg-white rounded-lg shadow-lg p-6 relative transition-transform duration-300 ease-in-out ${
           isOpen ? "scale-100" : "scale-95"
         }`}
+        onClick={(e) => e.stopPropagation()} // Evita que los clics dentro del contenido cierren el modal
       >
         <button
           ref={closeButtonRef}
